@@ -20,8 +20,8 @@ const Composebar = () => {
             attachmentPreview, setAttachmentPreview, editMsg, setEditMsg , chats
             , setLoading } = useChatContext();
 
-    const IamBlocked = users[data.user.uid]?.blockedUsers?.find(u => u === currentUser.uid);
-    const isUserBlocked = users[currentUser.uid]?.blockedUsers?.find(u => u === data?.user?.uid);
+    const IamBlocked = users[data?.user?.uid]?.blockedUsers?.find(u => u === currentUser?.uid);
+    const isUserBlocked = users[currentUser?.uid]?.blockedUsers?.find(u => u === data?.user?.uid);
 
     useEffect(() => {
         setInputText(editMsg?.text || "");
