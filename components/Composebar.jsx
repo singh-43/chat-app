@@ -18,7 +18,7 @@ const Composebar = () => {
     const [showBlockPopup, setShowBlockPopup] = useState(false);
     const { inputText, users, selectedChat, setInputText, data, attachment, setAttachment,
             attachmentPreview, setAttachmentPreview, editMsg, setEditMsg , chats
-            , setLoading } = useChatContext();
+            } = useChatContext();
 
     const IamBlocked = users[data?.user?.uid]?.blockedUsers?.find(u => u === currentUser?.uid);
     const isUserBlocked = users[currentUser?.uid]?.blockedUsers?.find(u => u === data?.user?.uid);
@@ -267,22 +267,21 @@ const Composebar = () => {
             }, 
             () => {
                 getDownloadURL(uploadTask.snapshot.ref).then(async (downloadURL) => {
-                    setLoading(true);
-                    // if(IamBlocked) {
-                    //     await updateDoc(doc(db, "chats", data.chatId), {
-                    //         messages: arrayUnion({
-                    //             id: messageUniqueId,
-                    //             text: inputText1,
-                    //             sender: currentUser.uid,
-                    //             date: Timestamp.now(),
-                    //             read: false,
-                    //             img: downloadURL,
-                    //             deletedInfo : {
-                    //                 [data?.user?.uid]: DELETED_FOR_ME
-                    //             }
-                    //         })
-                    //     })
-                    // } else {
+                    if(IamBlocked) {
+                        await updateDoc(doc(db, "chats", data.chatId), {
+                            messages: arrayUnion({
+                                id: messageUniqueId,
+                                text: inputText1,
+                                sender: currentUser.uid,
+                                date: Timestamp.now(),
+                                read: false,
+                                img: downloadURL,
+                                deletedInfo : {
+                                    [data?.user?.uid]: DELETED_FOR_ME
+                                }
+                            })
+                        })
+                    } else {
                         if(selectedUserIsChattingWithMe){
                             await updateDoc(doc(db, "chats", data.chatId), {
                                 messages: arrayUnion({
@@ -306,7 +305,7 @@ const Composebar = () => {
                                 })
                             })
                         }
-                    // }
+                    }
                 });
             }
             );
