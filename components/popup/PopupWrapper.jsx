@@ -1,11 +1,14 @@
 import React from 'react';
 import Icons from '../Icons';
 import { IoClose } from 'react-icons/io5';
+import { handleDragStart } from '@/utils/helpers';
 
 const PopupWrapper = (props) => {
   return (
     <div className='h-full w-full fixed top-0 left-0 z-20
-        flex justify-center items-center'>
+        flex justify-center items-center select-none'
+        onDragStart={handleDragStart}    
+    >
         <div className='w-full h-full absolute glass-effect'
             onClick={props.onHide}
         ></div>

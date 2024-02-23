@@ -1,23 +1,23 @@
-// import { initializeApp } from "firebase/app";
-// import { getAuth } from "firebase/auth";
-// import { getStorage } from "firebase/storage";
-// import { getDatabase } from "firebase/database";
-// import { getFirestore } from "firebase/firestore";
+import { initializeApp } from "firebase/app";
+import { getAuth } from "firebase/auth";
+import { getStorage } from "firebase/storage";
+import { getDatabase } from "firebase/database";
+import { getFirestore } from "firebase/firestore";
 
-// const firebaseConfig = {
-//   apiKey: "AIzaSyDYZKdblLeP1DYXv3JdhKWVuU91jmWXtQM",
-//   authDomain: "chat-app-74289.firebaseapp.com",
-//   projectId: "chat-app-74289",
-//   storageBucket: "chat-app-74289.appspot.com",
-//   messagingSenderId: "66799785731",
-//   appId: "1:66799785731:web:a7c88f71cb4d39fc11fb36"
-// };
+const firebaseConfig = {
+  apiKey: "AIzaSyDYZKdblLeP1DYXv3JdhKWVuU91jmWXtQM",
+  authDomain: "chat-app-74289.firebaseapp.com",
+  projectId: "chat-app-74289",
+  storageBucket: "chat-app-74289.appspot.com",
+  messagingSenderId: "66799785731",
+  appId: "1:66799785731:web:a7c88f71cb4d39fc11fb36"
+};
 
-// const app = initializeApp(firebaseConfig);
-// export const auth = getAuth(app);
-// export const storage = getStorage(app);
-// export const dbt = getDatabase(app);
-// export const db = getFirestore(app);
+const app = initializeApp(firebaseConfig);
+export const auth = getAuth(app);
+export const dbt = getDatabase(app);
+export const db = getFirestore(app);
+export const storage = getStorage(app);
 
 // import { initializeApp } from "firebase/app";
 // import { getAuth } from "firebase/auth";
@@ -37,9 +37,9 @@
 
 // const app = initializeApp(firebaseConfig);
 // export const auth = getAuth(app);
-// export const storage = getStorage(app);
 // export const dbt = getDatabase(app);
 // export const db = getFirestore(app);
+// export const storage = getStorage(app);
 
 // import { initializeApp } from "firebase/app";
 // import { getAuth } from "firebase/auth";
@@ -58,27 +58,27 @@
 
 // const app = initializeApp(firebaseConfig);
 // export const auth = getAuth(app);
-// export const storage = getStorage(app);
 // export const db = getFirestore(app);
 // export const dbt = getDatabase(app);
+// export const storage = getStorage(app);
 
-import { initializeApp } from "firebase/app";
-import { getAuth } from "firebase/auth";
-import { getStorage } from "firebase/storage";
-import { getFirestore } from "firebase/firestore";
-import { getDatabase } from "firebase/database";
+// import { initializeApp } from "firebase/app";
+// import { getAuth } from "firebase/auth";
+// import { getStorage } from "firebase/storage";
+// import { getFirestore } from "firebase/firestore";
+// import { getDatabase } from "firebase/database";
 
-const firebaseConfig = {
-  apiKey: "AIzaSyBFz9NjKADruLk10SZJKikPFH3Y6iyQjhU",
-  authDomain: "dobu-347be.firebaseapp.com",
-  projectId: "dobu-347be",
-  storageBucket: "dobu-347be.appspot.com",
-  messagingSenderId: "1044743627844",
-  appId: "1:1044743627844:web:1cda7f7c7b6d2a4f330811"
-};
+// const firebaseConfig = {
+//   apiKey: "AIzaSyBFz9NjKADruLk10SZJKikPFH3Y6iyQjhU",
+//   authDomain: "dobu-347be.firebaseapp.com",
+//   projectId: "dobu-347be",
+//   storageBucket: "dobu-347be.appspot.com",
+//   messagingSenderId: "1044743627844",
+//   appId: "1:1044743627844:web:1cda7f7c7b6d2a4f330811"
+// };
 
-const app = initializeApp(firebaseConfig);
-export const auth = getAuth(app);
-export const storage = getStorage(app);
-export const db = getFirestore(app);
-export const dbt = getDatabase(app);
+// const app = initializeApp(firebaseConfig);
+// export const auth = getAuth(app);
+// export const db = getFirestore(app);
+// export const dbt = getDatabase(app);
+// export const storage = getStorage(app);

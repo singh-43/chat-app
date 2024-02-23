@@ -1,5 +1,28 @@
 import moment from "moment";
 
+export const handleDragStart = (e) => e.preventDefault();
+
+export const openInNewTab = (url) => {
+    window.open(url, "_blank", "noopener noreferrer");
+};
+
+export const fileSize = (file_size) => {
+    let i=0;
+    for(i = 0; i < 10; i++){
+        if(file_size > 1024){
+            file_size /= 1024;
+        }else{
+            break;
+        }
+    }
+    
+    if( i === 0) return file_size.toFixed(2).toString() + " B";
+    if( i === 1) return file_size.toFixed(2).toString() + " KB";
+    if( i === 2) return file_size.toFixed(2).toString() + " MB";
+    if( i === 2) return file_size.toFixed(2).toString() + " GB";
+    return file_size.toString() + "TB";
+}
+
 export const formatDate = (date) => {
     const now = new Date();
     const diff = now.getTime() - date?.getTime();

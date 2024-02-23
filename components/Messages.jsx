@@ -132,24 +132,24 @@ const Messages = () => {
     }, [!unread])
 
     const scrollToBottom = () => {
-        const chatContainer = ref.current;
-        chatContainer.scrollTop = chatContainer.scrollHeight;
+        const chatContainer = ref?.current;
+        chatContainer.scrollTop = chatContainer?.scrollHeight;
     }
 
-    // useEffect(() => {
-    //     const updatedDate = {}
-    //     messagesData?.map((m, index) => {
-    //         const timestamp = new Timestamp(
-    //             m.date?.seconds,
-    //             m.date?.nanoseconds
-    //         );
+    useEffect(() => {
+        const updatedDate = {}
+        messagesData?.map((m, index) => {
+            const timestamp = new Timestamp(
+                m.date?.seconds,
+                m.date?.nanoseconds
+            );
         
-    //         const date = timestamp.toDate();
-    //         updatedDate[index] = dateHelper(date);
-    //     })
-    //     setLastDate(updatedDate)
-    //     //eslint-disable-next-line
-    // }, [messages]) 
+            const date = timestamp.toDate();
+            updatedDate[index] = dateHelper(date);
+        })
+        setLastDate(updatedDate)
+        //eslint-disable-next-line
+    }, [messages]) 
 
     return (
         <div 
@@ -168,7 +168,7 @@ const Messages = () => {
                             </div>
                         }
                         <Message message={m} updateLastMessage={updateLastMessage}
-                            // lastDate={lastDate} index={i}
+                            lastDate={lastDate} index={i}
                         />
                     </React.Fragment>
                 )

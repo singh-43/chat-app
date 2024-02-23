@@ -137,7 +137,7 @@ const LeftNav = () => {
     
     const editProfileContainer = () => {
         return (
-            <div className='relative flex flex-col items-center'>
+            <div className='relative flex flex-col items-center select-none'>
                 <ToastMessage />
                 <Icons 
                     size="small"

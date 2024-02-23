@@ -6,6 +6,7 @@ import { db } from '@/firebase/firebase';
 import { useAuth } from '@/context/authContext';
 import { useChatContext } from '@/context/chatContext';
 import { deleteField, doc, getDoc, serverTimestamp, setDoc, updateDoc } from 'firebase/firestore';
+import { handleDragStart } from '@/utils/helpers';
 
 const UsersPopup = (props) => {
 
@@ -90,7 +91,9 @@ const UsersPopup = (props) => {
 
     return (
         <PopupWrapper {...props}>
-            <div className='relative'>
+            <div className='relative select-none'
+                onDragStart={handleDragStart}
+            >
                 <RiSearch2Line className="absolute top-4 text-c3 left-4" />
                 <input 
                     type='text'
@@ -107,7 +110,9 @@ const UsersPopup = (props) => {
                 {/* <span className='absolute top-[14px] right-4 text-sm text-c3 select-none'>Enter</span> */}
             </div>
             <div className='mt-5 flex flex-col gap-2 grow relative overflow-auto 
-                scrollbar select-none'>
+                scrollbar select-none'
+                onDragStart={handleDragStart}
+            >
                 <div className='absolute w-full'>
                     { 
                         finalList.length > 0 ?

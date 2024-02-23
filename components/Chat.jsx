@@ -12,7 +12,7 @@ const Chat = () => {
     const isUserBlocked = users[currentUser.uid]?.blockedUsers?.find(u => u === data?.user?.uid);
 
     return (
-        <div className='flex flex-col p-5 grow'>
+        <div className='flex flex-col p-5 grow select-none'>
             <ChatHeader />
             {data.chatId && <Messages />}
             { isUserBlocked && (<div className='w-full text-center text-c3 py-5'>You have blocked this user.</div>)}

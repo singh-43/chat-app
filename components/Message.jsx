@@ -1,18 +1,20 @@
 import Icons from './Icons';
 import Avatar from './Avatar';
 import Image from 'next/image';
+import { saveAs } from "file-saver";
 import MessageMenu from './MessageMenu';
-import { db } from '@/firebase/firebase';
+import { db, storage } from '@/firebase/firebase';
+import { FaDownload } from "react-icons/fa6";
 import { GoChevronDown } from "react-icons/go";
 import { useAuth } from '@/context/authContext';
 import { IoCheckmarkDone } from "react-icons/io5";
-import React, { forwardRef, useEffect, useState } from 'react';
 import ImageViewer from "react-simple-image-viewer";
 import { useChatContext } from '@/context/chatContext';
 import DeleteMgsPopup from './popup/DeleteMessagePopup';
-import { timeHelper, dateHelper } from '@/utils/helpers';
-import { Timestamp, arrayRemove, arrayUnion, doc, getDoc, updateDoc } from 'firebase/firestore';
+import React, { forwardRef, useEffect, useState } from 'react';
 import { DELETED_FOR_ME, DELETED_FOR_EVERYONE } from '@/utils/constants';
+import { timeHelper, dateHelper, handleDragStart, openInNewTab } from '@/utils/helpers';
+import { Timestamp, arrayRemove, arrayUnion, doc, getDoc, updateDoc } from 'firebase/firestore';
 
 const Message = ({ message, updateLastMessage, index, lastDate }) => {
 
@@ -75,17 +77,25 @@ const Message = ({ message, updateLastMessage, index, lastDate }) => {
         }
     }   
 
+    const downloadMedia = (e, message) => {
+        console.clear();
+        console.log("message?.img", message?.url);
+        console.log("message?.fileName", message?.name);
+        e.preventDefault();
+        saveAs(message.url, message.name);
+    }
+
     return (
         <>
-            {/* {
+            {
                 ((dateHelper(date) !== lastDate[index - 1]) || index === 0) && (
                 <div className='flex justify-center text-c3 text-sm mb-5'>
                     <div className='bg-c1/[0.5] py-[6px] rounded-xl w-[145px] font-semibold text-center'>
                         {dateHelper(date)}
                     </div>
                 </div>)
-            } */}
-            <div className={`mb-5 max-w-[75%] ${self ? "self-end" : ""}`}>
+            }
+            <div className={`mb-5 max-w-[75%] ${self ? "self-end" : ""} select-none`}>
                 {showDeletePopup && (<DeleteMgsPopup 
                     self={self}
                     noHeader={true}
@@ -99,45 +109,230 @@ const Message = ({ message, updateLastMessage, index, lastDate }) => {
                     <Avatar size="small" user={self ? currentUser : users[data?.user.uid]} 
                         className="mb-4"
                     />
-                    <div className={`${message.img ? "px-2 pt-2 pb-[4px]" : "px-[8px] pt-[8px] pb-[4px]"} group flex flex-col rounded-md
-                        relative break-all bg-c5 ${self ? "rounded-br-sm" : 
+                    <div className={`${message?.url ? "px-2 pt-2 pb-[4px]" : "px-[8px] pt-[8px] pb-[4px]"}
+                        group flex flex-col rounded-md relative break-all bg-c5 ${self ? "rounded-br-sm" : 
                         "rounded-bl-sm"}`}>
-                        {message.img && (
+                        {message?.url && (
                             <div 
-                                className='mb-[5px]'
+                                className='mb-[2px]'
+                                onDragStart={handleDragStart}
                             >
-                                <Image 
-                                    src={message.img}
-                                    width={220}
-                                    height={220}
-                                    alt={message?.text || ""}
-                                    className='rounded-sm z-10 max-w-[220px] max-h-[220px] cursor-pointer'
-                                    onClick={() => {
-                                        setImageViewer({
-                                            msgId: message.id,
-                                            url: message.img
-                                        })
-                                    }}
-                                />
                                 {
-                                    imageViewer && imageViewer.msgId === message.id && (
-                                        <ImageViewer
-                                            src={[imageViewer.url]}
-                                            currentIndex={0}
-                                            disableScroll={false}
-                                            closeOnClickOutside={true}
-                                            onClose={() => setImageViewer(null)}
-                                        />
+                                    message.type === "image"?
+                                    (
+                                        <div className='relative group'>
+                                            <Image 
+                                                src={message?.url}
+                                                width={220}
+                                                height={220}
+                                                alt={message?.text || ""}
+                                                className='rounded-sm z-10 max-w-[220px] max-h-[220px] cursor-pointer'
+                                                onClick={() => {
+                                                    setImageViewer({
+                                                        msgId: message?.id,
+                                                        url: message?.url
+                                                    })
+                                                }}
+                                            />
+                                            <div className="hidden absolute bottom-2 right-2 group-hover:flex
+                                                cursor-pointer"
+                                                onClick={(e) => {
+                                                    downloadMedia(e, message);
+                                                }}    
+                                            >
+                                                <FaDownload size={18} color='#202329' />
+                                            </div>
+                                            {
+                                                imageViewer && imageViewer.msgId === message.id && (
+                                                    <ImageViewer
+                                                        src={[imageViewer?.url]}
+                                                        currentIndex={0}
+                                                        disableScroll={false}
+                                                        closeOnClickOutside={true}
+                                                        onClose={() => setImageViewer(null)}
+                                                    />
+                                                )
+                                            }
+                                        </div>
+                                    ):
+                                    message?.type === "video" ?
+                                    (
+                                        <video width="220" height="220" controls>
+                                            <source src={message?.url} type="video/mp4" />
+                                        </video>
+
                                     )
+                                    :
+                                    null
+                                }
+                            </div>
+                        )}
+                        {message?.url && (
+                            <div 
+                                className="mb-[4px] flex items-center justify-center"
+                                onDragStart={handleDragStart}
+                            >
+                                {
+                                    message?.ext === "pdf"?
+                                    (
+                                        <div className='flex gap-2 w-[220px] h-[40px]'>
+                                            <Image 
+                                                src={"/pdf.png"}
+                                                width={100}
+                                                height={100}
+                                                alt={message?.text || ""}
+                                                className='rounded-sm z-10 max-w-[45px] min-w-[45px]'
+                                            />
+                                            <div className='text-sm text-c3 leading-1 flex flex-col gap-1'>
+                                                <p className='line-clamp-2 text-white break-all cursor-pointer'
+                                                    onClick={() => {
+                                                        openInNewTab(message.url)
+                                                    }}
+                                                >
+                                                    {message.name}
+                                                </p>
+                                                <p className='text-xs'>
+                                                    {message.size}
+                                                </p>
+                                            </div>
+                                        </div>
+                                    )
+                                    :
+                                    message?.ext === "docs" || message?.ext === "docx" || message?.ext === "doc" ?
+                                    (
+                                        <div className='flex gap-2 w-[220px] h-[40px]'>
+                                            <Image 
+                                                src={"/doc.png"}
+                                                width={100}
+                                                height={100}
+                                                alt={message?.text || ""}
+                                                className='rounded-sm z-10 max-w-[45px] min-w-[45px]'
+                                            />
+                                            <div className='text-sm text-c3 leading-1 flex flex-col gap-1'>
+                                                <p className='line-clamp-2 text-white break-all cursor-pointer'
+                                                    onClick={() => {
+                                                        openInNewTab(message.url)
+                                                    }}
+                                                >
+                                                    {message.name}
+                                                </p>
+                                                <p className='text-xs'>
+                                                    {message.size}
+                                                </p>
+                                            </div>
+                                        </div>
+                                    )
+                                    :
+                                    message?.ext === "ppt" || message?.ext === "pptx"?
+                                    (
+                                        <div className='flex gap-2 w-[220px] h-[40px]'>
+                                            <Image 
+                                                src={"/ppt.png"}
+                                                width={100}
+                                                height={100}
+                                                alt={message?.text || ""}
+                                                className='rounded-sm z-10 max-w-[45px] min-w-[45px]'
+                                            />
+                                            <div className='text-sm text-c3 leading-1 flex flex-col gap-1'>
+                                                <p className='line-clamp-2 text-white break-all cursor-pointer'
+                                                    onClick={() => {
+                                                        openInNewTab(message.url)
+                                                    }}
+                                                >
+                                                    {message.name}
+                                                </p>
+                                                <p className='text-xs'>
+                                                    {message.size}
+                                                </p>
+                                            </div>
+                                        </div>
+                                    )
+                                    :
+                                    message?.ext === "xls" || message?.ext === "xlsx"?
+                                    (
+                                        <div className='flex gap-2 w-[220px] h-[40px]'>
+                                            <Image 
+                                                src={"/sheets.png"}
+                                                width={100}
+                                                height={100}
+                                                alt={message?.text || ""}
+                                                className='rounded-sm z-10 max-w-[45px] min-w-[45px]'
+                                            />
+                                            <div className='text-sm text-c3 leading-1 flex flex-col gap-1'>
+                                                <p className='line-clamp-2 text-white break-all cursor-pointer'
+                                                    onClick={() => {
+                                                        openInNewTab(message.url)
+                                                    }}
+                                                >
+                                                    {message.name}
+                                                </p>
+                                                <p className='text-xs'>
+                                                    {message.size}
+                                                </p>
+                                            </div>
+                                        </div>
+                                    )
+                                    :
+                                    message?.ext === "txt"?
+                                    (
+                                        <div className='flex gap-2 w-[220px] h-[40px]'>
+                                            <Image 
+                                                src={"/txt.png"}
+                                                width={100}
+                                                height={100}
+                                                alt={message?.text || ""}
+                                                className='rounded-sm z-10 max-w-[45px] min-w-[45px]'
+                                            />
+                                            <div className='text-sm text-c3 leading-1 flex flex-col gap-1'>
+                                                <p className='line-clamp-2 text-white break-all cursor-pointer'
+                                                    onClick={() => {
+                                                        openInNewTab(message.url)
+                                                    }}
+                                                >
+                                                    {message.name}
+                                                </p>
+                                                <p className='text-xs'>
+                                                    {message.size}
+                                                </p>
+                                            </div>
+                                        </div>
+                                    )
+                                    :
+                                    message?.ext === "zip"?
+                                    (
+                                        <div className='flex gap-2 w-[220px] h-[40px]'>
+                                            <Image 
+                                                src={"/zip.png"}
+                                                width={100}
+                                                height={100}
+                                                alt={message?.text || ""}
+                                                className='rounded-sm z-10 max-w-[45px] min-w-[45px]'
+                                            />
+                                            <div className='text-sm text-c3 leading-1 flex flex-col gap-1'>
+                                                <p className='line-clamp-2 text-white break-all cursor-pointer'
+                                                    onClick={() => {
+                                                        openInNewTab(message.url)
+                                                    }}
+                                                >
+                                                    {message.name}
+                                                </p>
+                                                <p className='text-xs'>
+                                                    {message.size}
+                                                </p>
+                                            </div>
+                                        </div>
+                                    )
+                                    :
+                                    null
                                 }
                             </div>
                         )}
                         {message.text && (
-                            <div className={`text-md z-10 ${ message.img ? "max-w-[220px]" : null }`}>
+                            <div className={`text-md select-text z-10 ${ message.img ? "max-w-[220px]" : null }`}>
                                 {message.text}
                             </div>
                         )}
-                        <div className={`flex items-center gap-1 mt-[1px] ${ self ? "justify-end" : "justify-end" }`}>
+                        <div className={`flex items-center gap-1 mt-[1px] ${ self ? "justify-end" : "justify-end" } ${message.text.length === 0 && message.type !== "image" && message.type !== "video" ? "absolute bottom-[3px] right-[6px]" : null}`}>
                             {message?.edited && (<div className="text-c3 text-xs">
                                 {`Edited`}
                             </div>)}

@@ -12,6 +12,10 @@ export const ChatContextProvider = ({children}) => {
             setInputText, resetFooterStates, } = useAuth();
 
     const [unread, setUnread] = useState(null);
+    const [fileType, setFileType] = useState(null);
+    const [fileName, setFileName] = useState("");
+    const [fileExt, setFileExt] = useState("");
+    const [fileSize, setFileSize] = useState("");
 
     return (
         <chatContext.Provider value={{
@@ -23,6 +27,8 @@ export const ChatContextProvider = ({children}) => {
             setAttachmentPreview, imageViewer, setImageViewer,
             editMsg, setEditMsg, inputText, setInputText,
             resetFooterStates, unread, setUnread,
+            fileType, setFileType, fileName, setFileName,
+            fileExt, setFileExt, fileSize, setFileSize
         }}>
             {children}
         </chatContext.Provider>

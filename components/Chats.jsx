@@ -1,6 +1,7 @@
 import React,{ useEffect, useRef, useState } from 'react';
 import { useChatContext } from '@/context/chatContext';
-import { Timestamp, arrayRemove, arrayUnion, collection, deleteField, doc, getDoc, onSnapshot, updateDoc, where } from 'firebase/firestore';
+import { Timestamp, arrayRemove, arrayUnion, collection, deleteField, 
+    doc, getDoc, onSnapshot, updateDoc, where } from 'firebase/firestore';
 import { db } from '@/firebase/firebase';
 import { RiSearch2Line } from "react-icons/ri";
 import Avatar from './Avatar';
@@ -9,6 +10,9 @@ import { formatDate } from '@/utils/helpers';
 import { query } from 'firebase/database';
 import { FaImage } from "react-icons/fa6";
 import { IoCheckmarkDone } from "react-icons/io5";
+import { TiDocumentText } from "react-icons/ti";
+import { GoFileZip } from "react-icons/go";
+import { IoVideocam } from "react-icons/io5";
 import { DELETED_FOR_ME } from '@/utils/constants';
 
 const Chats = () => {
@@ -197,7 +201,7 @@ const Chats = () => {
                                             <div className={`text-sm text-c3 flex items-center gap-1`}>
                                                 {
                                                     (isUserBlocked && "You blocked this user.")||
-                                                    ((chat[1]?.lastMessage?.text || chat[1]?.lastMessage?.img) && (
+                                                    ((chat[1]?.lastMessage?.text || chat[1]?.lastMessage?.type) && (
                                                         <>
                                                             {
                                                                 chat[1]?.lastMessage?.sender === currentUser?.uid &&
@@ -206,9 +210,12 @@ const Chats = () => {
                                                                         color={`${ !readStatus?.[chat[0]]?.length ? "#2e58f0" : "white"}`} 
                                                                     size={18} />
                                                                 </p>}
-                                                            { chat[1]?.lastMessage?.img && <p className='flex items-center'><FaImage />&#160;</p>}
+                                                            { chat[1]?.lastMessage?.type === "image" && <p className='flex items-center'><FaImage /></p>}
+                                                            { chat[1]?.lastMessage?.type === "video" && <p className='flex items-center'><IoVideocam /></p>}
+                                                            { chat[1]?.lastMessage?.type === "application" && chat[1]?.lastMessage?.extName === "pdf" && <p className='flex items-center'><TiDocumentText size={20} /></p>}
+                                                            { chat[1]?.lastMessage?.type === "zip" && <p className='flex items-center'><GoFileZip /></p>}
                                                             <p className='line-clamp-1 break-all'>
-                                                                { chat[1]?.lastMessage?.text?.trim() ? chat[1]?.lastMessage?.text : "image" }
+                                                                { chat[1]?.lastMessage?.text?.trim() ? chat[1]?.lastMessage?.text : chat[1]?.lastMessage?.type === "image" ? "image" : chat[1]?.lastMessage?.type === "video" ? "video" : chat[1]?.lastMessage?.name }
                                                             </p>
                                                         </>
                                                     )) || "Send message"}

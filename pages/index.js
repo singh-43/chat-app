@@ -28,7 +28,7 @@ const Home = () => {
         <div className='shrink-0 flex w-full'>
           <LeftNav />
           <div className='bg-c2 grow flex'>
-            <div className='w-[350px] border-r border-white/[0.05]
+            <div className='w-[400px] border-r border-white/[0.05]
               scrollbar p-5 shrink-0 overflow-auto'>
                 <div className='h-full flex flex-col'>
                   <Chats />
