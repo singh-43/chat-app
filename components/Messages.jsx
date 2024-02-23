@@ -15,7 +15,8 @@ const Messages = () => {
     const { currentUser } = useAuth();
     const [messages, setMessages] = useState([]);
     const [lastDate, setLastDate] = useState({})
-    const { data, setIsTyping, selectedChat, unread, setUnread } = useChatContext();
+    const { data, setIsTyping, selectedChat, unread, setUnread
+        , loading, setLoading } = useChatContext();
 
     const updateLastMessage = async (messageId, action) => {
         try {
@@ -24,14 +25,17 @@ const Messages = () => {
             for(i = messages?.length - 1; i >= 0; i--){
                 if(action !== DELETED_FOR_EVERYONE){
                     if(messageId !== messages[i].id && messages[i]?.deletedInfo?.[currentUser.uid] !== DELETED_FOR_ME && !messages[i]?.deletedInfo?.deletedForEveryone && !messages[i]?.deleteChatInfo?.[currentUser.uid]){
-                        // let msg = { text: messages[i].text }
                         let msg = { 
                             text: messages[i].text,
                             sender: messages[i].sender,
                             id: messages[i].id,
                         }
-                        if(messages[i]?.img) {
-                            msg.img = messages[i].img;
+                        if(messages[i]?.url) {
+                            msg.url = messages[i].url;
+                            msg.extName = messages[i].ext;
+                            msg.type = messages[i].type;
+                            msg.name = messages[i].name;
+                            msg.size = messages[i].size;
                         }
                         await updateDoc(doc(db, "userChats", currentUser.uid),{
                             [data.chatId + ".lastMessage"]: msg,
@@ -49,8 +53,12 @@ const Messages = () => {
                             sender: messages[i].sender,
                             id: messages[i].id,
                         }
-                        if(messages[i]?.img) {
-                            msg.img = messages[i].img;
+                        if(messages[i]?.url) {
+                            msg.url = messages[i].url;
+                            msg.extName = messages[i].ext;
+                            msg.type = messages[i].type;
+                            msg.name = messages[i].name;
+                            msg.size = messages[i].size;
                         }
                         await updateDoc(doc(db, "userChats", currentUser.uid),{
                             [data.chatId + ".lastMessage"]: msg,
@@ -64,8 +72,12 @@ const Messages = () => {
                             sender: messages[i].sender,
                             id: messages[i].id,
                         }
-                        if(messages[i]?.img) {
-                            msg.img = messages[i].img;
+                        if(messages[i]?.url) {
+                            msg.url = messages[i].url;
+                            msg.extName = messages[i].ext;
+                            msg.type = messages[i].type;
+                            msg.name = messages[i].name;
+                            msg.size = messages[i].size;
                         }
                         await updateDoc(doc(db, "userChats", selectedChat.uid),{
                             [data.chatId + ".lastMessage"]: msg,

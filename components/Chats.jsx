@@ -11,7 +11,8 @@ import { query } from 'firebase/database';
 import { FaImage } from "react-icons/fa6";
 import { IoCheckmarkDone } from "react-icons/io5";
 import { TiDocumentText } from "react-icons/ti";
-import { GoFileZip } from "react-icons/go";
+import { PiFileZipFill } from "react-icons/pi";
+import { BsFiletypeExe } from "react-icons/bs";
 import { IoVideocam } from "react-icons/io5";
 import { DELETED_FOR_ME } from '@/utils/constants';
 
@@ -210,10 +211,11 @@ const Chats = () => {
                                                                         color={`${ !readStatus?.[chat[0]]?.length ? "#2e58f0" : "white"}`} 
                                                                     size={18} />
                                                                 </p>}
-                                                            { chat[1]?.lastMessage?.type === "image" && <p className='flex items-center'><FaImage /></p>}
-                                                            { chat[1]?.lastMessage?.type === "video" && <p className='flex items-center'><IoVideocam /></p>}
-                                                            { chat[1]?.lastMessage?.type === "application" && chat[1]?.lastMessage?.extName === "pdf" && <p className='flex items-center'><TiDocumentText size={20} /></p>}
-                                                            { chat[1]?.lastMessage?.type === "zip" && <p className='flex items-center'><GoFileZip /></p>}
+                                                            { chat[1]?.lastMessage?.type === "image" && <p className='flex items-center'><FaImage size={16} /></p>}
+                                                            { chat[1]?.lastMessage?.type === "video" && <p className='flex items-center'><IoVideocam size={20} /></p>}
+                                                            { (chat[1]?.lastMessage?.extName === "ppt" || chat[1]?.lastMessage?.extName === "doc" || chat[1]?.lastMessage?.extName === "docs" || chat[1]?.lastMessage?.extName === "docx" || chat[1]?.lastMessage?.extName === "ppt" || chat[1]?.lastMessage?.extName === "pptx" || chat[1]?.lastMessage?.extName === "txt" || chat[1]?.lastMessage?.extName === "xls" || chat[1]?.lastMessage?.extName === "xlsx") && <p className='flex items-center'><TiDocumentText size={20} /></p>}
+                                                            { chat[1]?.lastMessage?.extName === "zip" && <p className='flex items-center'><PiFileZipFill size={20} /></p>}
+                                                            { chat[1]?.lastMessage?.extName === "exe" && <p className='flex items-center'><BsFiletypeExe size={20} /></p>}
                                                             <p className='line-clamp-1 break-all'>
                                                                 { chat[1]?.lastMessage?.text?.trim() ? chat[1]?.lastMessage?.text : chat[1]?.lastMessage?.type === "image" ? "image" : chat[1]?.lastMessage?.type === "video" ? "video" : chat[1]?.lastMessage?.name }
                                                             </p>

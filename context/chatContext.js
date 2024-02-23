@@ -16,6 +16,7 @@ export const ChatContextProvider = ({children}) => {
     const [fileName, setFileName] = useState("");
     const [fileExt, setFileExt] = useState("");
     const [fileSize, setFileSize] = useState("");
+    const [loading, setLoading] = useState(false);
 
     return (
         <chatContext.Provider value={{
@@ -28,7 +29,8 @@ export const ChatContextProvider = ({children}) => {
             editMsg, setEditMsg, inputText, setInputText,
             resetFooterStates, unread, setUnread,
             fileType, setFileType, fileName, setFileName,
-            fileExt, setFileExt, fileSize, setFileSize
+            fileExt, setFileExt, fileSize, setFileSize,
+            loading, setLoading,
         }}>
             {children}
         </chatContext.Provider>

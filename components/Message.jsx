@@ -366,7 +366,11 @@ const Message = ({ message, updateLastMessage, index, lastDate }) => {
                                         showMenu={showMenu}
                                         setEditMsg={() => {
                                             setEditMsg(message);
-                                            setAttachmentPreview(message.img);
+                                            setAttachmentPreview({
+                                                blob: message.url,
+                                                type: message.type,
+                                                ext: message.ext,
+                                              });
                                         }}
                                         setShowMenu={setShowMenu}
                                         deletePopupHandler={deletePopupHandler}

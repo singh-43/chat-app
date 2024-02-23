@@ -19,7 +19,7 @@ const Composebar = () => {
     const { inputText, users, selectedChat, setInputText, data, attachment, setAttachment,
             attachmentPreview, setAttachmentPreview, editMsg, setEditMsg , chats,
             fileType, fileName, fileExt, setFileType, setFileName, setFileExt
-            , setFileSize, fileSize } = useChatContext();
+            , setFileSize, fileSize, loading, setLoading } = useChatContext();
 
     const IamBlocked = users[data?.user?.uid]?.blockedUsers?.find(u => u === currentUser?.uid);
     const isUserBlocked = users[currentUser?.uid]?.blockedUsers?.find(u => u === data?.user?.uid);
@@ -81,7 +81,6 @@ const Composebar = () => {
     const handleEdit = async () => {
 
         const messageId = editMsg.id;
-        let file_type, file_name, file_ext, file_size;
         const chatRef = doc(db, "chats", data.chatId);
         const chatDoc = await getDoc(chatRef);
 
@@ -123,10 +122,6 @@ const Composebar = () => {
                             //     message.deletedInfo = null
                             // }
                         }
-                        file_ext = fileExt;
-                        file_type = fileType;
-                        file_name = fileName;
-                        file_size = fileSize;
                         return message;
                     })
                     await updateDoc(chatRef, {
@@ -153,12 +148,6 @@ const Composebar = () => {
                         //     message.deletedInfo = null
                         // }
                     }
-                    if(message?.type){
-                        file_ext = message.ext;
-                        file_type = message.type;
-                        file_name = message.name;
-                        file_size = message.size;
-                    }
                 }
                 return message;
             })
@@ -173,10 +162,10 @@ const Composebar = () => {
             id: messageId,
         }
         if(attachment || attachmentPreview){
-            msg.type = type;
-            msg.extName = file_ext;
-            msg.name = file_name;
-            msg.size = file_size;
+            msg.extName = fileExt;
+            msg.type = fileType;
+            msg.name = fileName;
+            msg.size = fileSize;
         }
 
         const combinedId = currentUser.uid > selectedChat.uid ? 
