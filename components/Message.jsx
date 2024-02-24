@@ -126,7 +126,7 @@ const Message = ({ message, updateLastMessage, index, lastDate }) => {
                                                 width={220}
                                                 height={220}
                                                 alt={message?.text || ""}
-                                                className='rounded-sm w-[220px] h-[220px] cursor-pointer'
+                                                className='rounded-sm w-[220px] max-h-[220px] cursor-pointer'
                                                 onClick={() => {
                                                     setImageViewer({
                                                         msgId: message?.id,
@@ -190,9 +190,9 @@ const Message = ({ message, updateLastMessage, index, lastDate }) => {
                                                 className='rounded-sm w-[45px]'
                                             />
                                             <div className='text-sm text-c3 leading-1 flex flex-col gap-1'>
-                                                <p className='line-clamp-2 text-white break-all cursor-pointer'
-                                                    onClick={() => {
-                                                        openInNewTab(message.url)
+                                                <p className='line-clamp-2 text-white break-all cursor-pointer hover:text-c4'
+                                                    onClick={(e) => {
+                                                        downloadMedia(e, message);
                                                     }}
                                                 >
                                                     {message.name}
@@ -215,9 +215,9 @@ const Message = ({ message, updateLastMessage, index, lastDate }) => {
                                                 className='rounded-sm w-[45px]'
                                             />
                                             <div className='text-sm text-c3 leading-1 flex flex-col gap-1'>
-                                                <p className='line-clamp-2 text-white break-all cursor-pointer'
-                                                    onClick={() => {
-                                                        openInNewTab(message.url)
+                                                <p className='line-clamp-2 text-white break-all cursor-pointer hover:text-c4'
+                                                    onClick={(e) => {
+                                                        downloadMedia(e, message);
                                                     }}
                                                 >
                                                     {message.name}
@@ -240,9 +240,9 @@ const Message = ({ message, updateLastMessage, index, lastDate }) => {
                                                 className='rounded-sm w-[45px]'
                                             />
                                             <div className='text-sm text-c3 leading-1 flex flex-col gap-1'>
-                                                <p className='line-clamp-2 text-white break-all cursor-pointer'
-                                                    onClick={() => {
-                                                        openInNewTab(message.url)
+                                                <p className='line-clamp-2 text-white break-all cursor-pointer hover:text-c4'
+                                                    onClick={(e) => {
+                                                        downloadMedia(e, message);
                                                     }}
                                                 >
                                                     {message.name}
@@ -265,9 +265,9 @@ const Message = ({ message, updateLastMessage, index, lastDate }) => {
                                                 className='rounded-sm w-[45px]'
                                             />
                                             <div className='text-sm text-c3 leading-1 flex flex-col gap-1'>
-                                                <p className='line-clamp-2 text-white break-all cursor-pointer'
-                                                    onClick={() => {
-                                                        openInNewTab(message.url)
+                                                <p className='line-clamp-2 text-white break-all cursor-pointer hover:text-c4'
+                                                    onClick={(e) => {
+                                                        downloadMedia(e, message);
                                                     }}
                                                 >
                                                     {message.name}
@@ -290,9 +290,9 @@ const Message = ({ message, updateLastMessage, index, lastDate }) => {
                                                 className='rounded-sm w-[45px]'
                                             />
                                             <div className='text-sm text-c3 leading-1 flex flex-col gap-1'>
-                                                <p className='line-clamp-2 text-white break-all cursor-pointer'
-                                                    onClick={() => {
-                                                        openInNewTab(message.url)
+                                                <p className='line-clamp-2 text-white break-all cursor-pointer hover:text-c4'
+                                                    onClick={(e) => {
+                                                        downloadMedia(e, message);
                                                     }}
                                                 >
                                                     {message.name}
@@ -315,9 +315,9 @@ const Message = ({ message, updateLastMessage, index, lastDate }) => {
                                                 className='rounded-sm w-[45px]'
                                             />
                                             <div className='text-sm text-c3 leading-1 flex flex-col gap-1'>
-                                                <p className='line-clamp-2 text-white break-all cursor-pointer'
-                                                    onClick={() => {
-                                                        openInNewTab(message.url)
+                                                <p className='line-clamp-2 text-white break-all cursor-pointer hover:text-c4'
+                                                    onClick={(e) => {
+                                                        downloadMedia(e, message);
                                                     }}
                                                 >
                                                     {message.name}
