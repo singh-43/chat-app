@@ -82,19 +82,19 @@ const Message = ({ message, updateLastMessage, index, lastDate }) => {
         console.log("message?.img", message?.url);
         console.log("message?.fileName", message?.name);
         e.preventDefault();
-        saveAs(message.url, message.name);
+        saveAs(message.url, message?.name);
     }
 
     return (
         <>
-            {
+            {/* {
                 ((dateHelper(date) !== lastDate[index - 1]) || index === 0) && (
                 <div className='flex justify-center text-c3 text-sm mb-5'>
                     <div className='bg-c1/[0.5] py-[6px] rounded-xl w-[145px] font-semibold text-center'>
                         {dateHelper(date)}
                     </div>
                 </div>)
-            }
+            } */}
             <div className={`mb-5 max-w-[75%] ${self ? "self-end" : ""} select-none`}>
                 {showDeletePopup && (<DeleteMgsPopup 
                     self={self}
@@ -126,7 +126,7 @@ const Message = ({ message, updateLastMessage, index, lastDate }) => {
                                                 width={220}
                                                 height={220}
                                                 alt={message?.text || ""}
-                                                className='rounded-sm z-10 max-w-[220px] max-h-[220px] cursor-pointer'
+                                                className='rounded-sm w-[220px] h-[220px] cursor-pointer'
                                                 onClick={() => {
                                                     setImageViewer({
                                                         msgId: message?.id,
@@ -155,19 +155,25 @@ const Message = ({ message, updateLastMessage, index, lastDate }) => {
                                             }
                                         </div>
                                     ):
+                                    message?.type === "audio" ?
+                                    (
+                                        <audio controls className='w-[220px] h-[30px]'>
+                                            <source src={message.url} type={"audio/" + message.ext} />
+                                        </audio>
+                                    )
+                                    :
                                     message?.type === "video" ?
                                     (
-                                        <video width="220" height="220" controls>
-                                            <source src={message?.url} type="video/mp4" />
+                                        <video controls className='w-[220px] max-h-[220px]'>
+                                            <source src={message?.url} type={"video/" + message.ext} />
                                         </video>
-
                                     )
                                     :
                                     null
                                 }
                             </div>
                         )}
-                        {message?.url && (
+                        {message?.url && message.type !== "image"  && message.type !== "audio"  && message.type !== "video" && (
                             <div 
                                 className="mb-[4px] flex items-center justify-center"
                                 onDragStart={handleDragStart}
@@ -181,7 +187,7 @@ const Message = ({ message, updateLastMessage, index, lastDate }) => {
                                                 width={100}
                                                 height={100}
                                                 alt={message?.text || ""}
-                                                className='rounded-sm z-10 max-w-[45px] min-w-[45px]'
+                                                className='rounded-sm w-[45px]'
                                             />
                                             <div className='text-sm text-c3 leading-1 flex flex-col gap-1'>
                                                 <p className='line-clamp-2 text-white break-all cursor-pointer'
@@ -206,7 +212,7 @@ const Message = ({ message, updateLastMessage, index, lastDate }) => {
                                                 width={100}
                                                 height={100}
                                                 alt={message?.text || ""}
-                                                className='rounded-sm z-10 max-w-[45px] min-w-[45px]'
+                                                className='rounded-sm w-[45px]'
                                             />
                                             <div className='text-sm text-c3 leading-1 flex flex-col gap-1'>
                                                 <p className='line-clamp-2 text-white break-all cursor-pointer'
@@ -231,7 +237,7 @@ const Message = ({ message, updateLastMessage, index, lastDate }) => {
                                                 width={100}
                                                 height={100}
                                                 alt={message?.text || ""}
-                                                className='rounded-sm z-10 max-w-[45px] min-w-[45px]'
+                                                className='rounded-sm w-[45px]'
                                             />
                                             <div className='text-sm text-c3 leading-1 flex flex-col gap-1'>
                                                 <p className='line-clamp-2 text-white break-all cursor-pointer'
@@ -256,7 +262,7 @@ const Message = ({ message, updateLastMessage, index, lastDate }) => {
                                                 width={100}
                                                 height={100}
                                                 alt={message?.text || ""}
-                                                className='rounded-sm z-10 max-w-[45px] min-w-[45px]'
+                                                className='rounded-sm w-[45px]'
                                             />
                                             <div className='text-sm text-c3 leading-1 flex flex-col gap-1'>
                                                 <p className='line-clamp-2 text-white break-all cursor-pointer'
@@ -281,7 +287,7 @@ const Message = ({ message, updateLastMessage, index, lastDate }) => {
                                                 width={100}
                                                 height={100}
                                                 alt={message?.text || ""}
-                                                className='rounded-sm z-10 max-w-[45px] min-w-[45px]'
+                                                className='rounded-sm w-[45px]'
                                             />
                                             <div className='text-sm text-c3 leading-1 flex flex-col gap-1'>
                                                 <p className='line-clamp-2 text-white break-all cursor-pointer'
@@ -306,7 +312,7 @@ const Message = ({ message, updateLastMessage, index, lastDate }) => {
                                                 width={100}
                                                 height={100}
                                                 alt={message?.text || ""}
-                                                className='rounded-sm z-10 max-w-[45px] min-w-[45px]'
+                                                className='rounded-sm w-[45px]'
                                             />
                                             <div className='text-sm text-c3 leading-1 flex flex-col gap-1'>
                                                 <p className='line-clamp-2 text-white break-all cursor-pointer'
@@ -328,11 +334,11 @@ const Message = ({ message, updateLastMessage, index, lastDate }) => {
                             </div>
                         )}
                         {message.text && (
-                            <div className={`text-md select-text z-10 ${ message.img ? "max-w-[220px]" : null }`}>
+                            <div className={`text-md select-text ${ message.img ? "max-w-[220px]" : null }`}>
                                 {message.text}
                             </div>
                         )}
-                        <div className={`flex items-center gap-1 mt-[1px] ${ self ? "justify-end" : "justify-end" } ${message.text.length === 0 && message.type !== "image" && message.type !== "video" ? "absolute bottom-[3px] right-[6px]" : null}`}>
+                        <div className={`flex items-center gap-1 mt-[1px] ${ self ? "justify-end" : "justify-end" } ${message.text.length === 0 && message.type !== "image" && message.type !== "video" && message.type !== "audio" ? "absolute bottom-[3px] right-[6px]" : null}`}>
                             {message?.edited && (<div className="text-c3 text-xs">
                                 {`Edited`}
                             </div>)}

@@ -14,6 +14,7 @@ import { TiDocumentText } from "react-icons/ti";
 import { PiFileZipFill } from "react-icons/pi";
 import { BsFiletypeExe } from "react-icons/bs";
 import { IoVideocam } from "react-icons/io5";
+import { MdLibraryMusic } from "react-icons/md";
 import { DELETED_FOR_ME } from '@/utils/constants';
 
 const Chats = () => {
@@ -212,6 +213,7 @@ const Chats = () => {
                                                                     size={18} />
                                                                 </p>}
                                                             { chat[1]?.lastMessage?.type === "image" && <p className='flex items-center'><FaImage size={16} /></p>}
+                                                            { chat[1]?.lastMessage?.type === "audio" && <p className='flex items-center'><MdLibraryMusic size={20} /></p>}
                                                             { chat[1]?.lastMessage?.type === "video" && <p className='flex items-center'><IoVideocam size={20} /></p>}
                                                             { (chat[1]?.lastMessage?.extName === "ppt" || chat[1]?.lastMessage?.extName === "doc" || chat[1]?.lastMessage?.extName === "docs" || chat[1]?.lastMessage?.extName === "docx" || chat[1]?.lastMessage?.extName === "ppt" || chat[1]?.lastMessage?.extName === "pptx" || chat[1]?.lastMessage?.extName === "txt" || chat[1]?.lastMessage?.extName === "xls" || chat[1]?.lastMessage?.extName === "xlsx") && <p className='flex items-center'><TiDocumentText size={20} /></p>}
                                                             { chat[1]?.lastMessage?.extName === "zip" && <p className='flex items-center'><PiFileZipFill size={20} /></p>}

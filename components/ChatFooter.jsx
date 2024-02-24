@@ -9,46 +9,69 @@ import { IoClose } from 'react-icons/io5';
 import { MdDeleteForever } from 'react-icons/md';
 import data from '@emoji-mart/data'
 import Picker from '@emoji-mart/react'
-import { fileSize } from '@/utils/helpers';
+import { checkSize, findSize } from '@/utils/helpers';
+import { toast } from 'react-toastify';
+import ToastMessage from './ToastMessage';
 
 const ChatFooter = () => {
     
     const [showEmojiPicker, setShowEmojiPicker] = useState(false);
     const { editMsg, setEditMsg, inputText, setInputText, 
             setAttachment, setAttachmentPreview, attachmentPreview,
-            setFileType, setFileExt, fileName, setFileName, setFileSize } = useChatContext();
+            setFileType, fileExt, setFileExt, fileName, setFileName, setFileSize } = useChatContext();
 
     const onEmojiClick = (emojiData) => {
         let text = inputText;
         setInputText((text += emojiData?.native));
     };
 
-    var file_ext, file_path, file_type, file_name;
-
+    
     const onFileChange = (e) => {
         const file = e.target.files[0];
-    
-        setFileSize(fileSize(file.size));
+        
+        var file_ext, file_path, file_type;
         file_ext; //# will extract file extension
         file_type = file.type;
-        file_name = file.name;
-        setFileName(file_name);
+        
         file_path = (window.URL || window.webkitURL).createObjectURL(file);
     
         //# get file extension (eg: "jpg" or "jpeg" or "webp" etc)
-        file_ext = file_name.toLowerCase();
+        file_ext = file.name.toLowerCase();
         file_ext = file_ext.substr(
           file_ext.lastIndexOf('.') + 1,
           file_ext.length - file_ext.lastIndexOf('.')
         );
-        setFileExt(file_ext);
-    
+        
         //# get file type (eg: "image" or "video")
         file_type = file_type.toLowerCase();
         file_type = file_type.substr(0, file_type.indexOf('/'));
-    
+
+        if(checkSize(file.size, file_type)){
+            let errorMsg = "";
+            if(file_type === "video"){
+                errorMsg = "Video size is too large ( maximum size allowed is 100 MB )"
+            }
+            if(file_type !== "image" && file_type !== "audio" && file_type !== "video"){
+                errorMsg = "Document size is too large ( maximum size allowed is 2 GB )"
+            }
+            toast.error(errorMsg, {
+                position: "top-center"
+            },{
+              autoClose: 3000
+            })
+            e.target.value = '';
+            return;
+        }
+
         setAttachment(file);
+        if(file_ext === "m4a"){
+            setFileExt("x-m4a");
+        }else{
+            setFileExt(file_ext);
+        }
         setFileType(file_type);
+        setFileName(file.name);
+        setFileSize(findSize(file.size));
         e.target.value = '';
     
         if (file) {
@@ -64,17 +87,22 @@ const ChatFooter = () => {
 
     return (
         <div className='flex items-center bg-c1/[0.5] p-2 rounded-xl relative'>
+            <ToastMessage />
             {attachmentPreview && (
-                <div className='flex absolute bottom-16 left-0 gap-2 items-end '>
-                    <div className='min-w-[100px] min-h-[100px] max-w-[100px] max-h-[100px] bg-c1 p-2 rounded-md flex items-center justify-center'>
+                <div className='flex absolute bottom-16 left-0 gap-2 items-end'>
+                    <div className='z-100 w-[100px] max-h-[100px] bg-c1 p-2 rounded-md flex items-center justify-center'>
                         {
                             attachmentPreview.type === 'image' ? (
-                                <img src={attachmentPreview.blob} alt="Attachment Preview" />
+                                <img src={attachmentPreview.blob} alt="Attachment Preview" className='max-h-[90px] max-w-[90px] rounded-sm' />
                             ) 
                             :
+                            attachmentPreview.type === 'audio' ? (
+                                <img src={"/music.png"} alt="Attachment Preview" />
+                            )
+                            :
                             attachmentPreview.type === 'video' ? (
-                                <video width="100" height="100">
-                                    <source src={attachmentPreview.blob} type="video/mp4" />
+                                <video className='max-h-[90px] max-w-[90px]'>
+                                    <source src={attachmentPreview.blob} type={"video/" + fileExt} />
                                 </video>
                             )
                             :
