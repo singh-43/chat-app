@@ -1,4 +1,4 @@
-"use client";
+import { IoClose } from 'react-icons/io5';
 import Message from './Message';
 import { db } from '@/firebase/firebase';
 import { dateHelper } from '@/utils/helpers';
@@ -7,6 +7,8 @@ import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { Timestamp, deleteField, doc, onSnapshot, updateDoc } from 'firebase/firestore';
 import { DELETED_FOR_ME, DELETED_FOR_EVERYONE } from '@/utils/constants';
 import { useAuth } from '@/context/authContext';
+import Loader from './Loader';
+import Icons from './Icons';
 
 const Messages = () => {
 
@@ -15,8 +17,8 @@ const Messages = () => {
     const { currentUser } = useAuth();
     const [messages, setMessages] = useState([]);
     const [lastDate, setLastDate] = useState({})
-    const { data, setIsTyping, selectedChat, unread, setUnread
-        , loading, setLoading } = useChatContext();
+    const [src, setSrc] = useState("")
+    const { data, setIsTyping, selectedChat, unread, setUnread, } = useChatContext();
 
     const updateLastMessage = async (messageId, action) => {
         try {
@@ -166,7 +168,7 @@ const Messages = () => {
     return (
         <div 
             ref={ref}
-            className='grow p-5 overflow-auto scrollbar flex flex-col'
+            className='grow p-5 overflow-auto scrollbar flex flex-col relative'
         >
             {messagesData?.map((m, i) => {
                 return (
@@ -179,7 +181,8 @@ const Messages = () => {
                                 </div>
                             </div>
                         }
-                        <Message message={m} updateLastMessage={updateLastMessage}
+                        <Message message={m} updateLastMessage={updateLastMessage} 
+                            setSrc={setSrc}
                             // lastDate={lastDate} index={i}
                         />
                     </React.Fragment>

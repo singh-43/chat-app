@@ -18,7 +18,7 @@ const ChatFooter = () => {
     const [showEmojiPicker, setShowEmojiPicker] = useState(false);
     const { editMsg, setEditMsg, inputText, setInputText, 
             setAttachment, setAttachmentPreview, attachmentPreview,
-            setFileType, fileExt, setFileExt, fileName, setFileName, setFileSize } = useChatContext();
+            setFileType, fileExt, setFileExt, fileName, setFileName, setFileSize, } = useChatContext();
 
     const onEmojiClick = (emojiData) => {
         let text = inputText;
@@ -28,7 +28,6 @@ const ChatFooter = () => {
     
     const onFileChange = (e) => {
         const file = e.target.files[0];
-        
         var file_ext, file_path, file_type;
         file_ext; //# will extract file extension
         file_type = file.type;
@@ -46,18 +45,31 @@ const ChatFooter = () => {
         file_type = file_type.toLowerCase();
         file_type = file_type.substr(0, file_type.indexOf('/'));
 
+        console.clear();
+        console.log(file.type);
+
         if(checkSize(file.size, file_type)){
             let errorMsg = "";
             if(file_type === "video"){
-                errorMsg = "Video size is too large ( maximum size allowed is 100 MB )"
+                errorMsg = "Can't send video message over 100 MB"
             }
             if(file_type !== "image" && file_type !== "audio" && file_type !== "video"){
-                errorMsg = "Document size is too large ( maximum size allowed is 2 GB )"
+                errorMsg = "Can't send document message over 2 GB"
             }
             toast.error(errorMsg, {
                 position: "top-center"
             },{
-              autoClose: 3000
+              autoClose: 2000
+            })
+            e.target.value = '';
+            return;
+        }
+
+        if(file.type !== "image" && file.type !== "audio" && file.type !== "video" && file_ext !== "html" && file_ext !== "pdf" && file_ext !== "doc" && file_ext !== "docs" && file_ext !== "docx" && file_ext !== "ppt" && file_ext !== "pptx" && file_ext !== "xls" && file_ext !== "xlsx" && file_ext !== "txt" && file_ext !== "7z" && file_ext !== "rar" && file_ext !== "zip" && file_ext !== "zipx" && file_ext !== "z" && file_ext !== "tar" && file_ext !== "taz" && file_ext !== "tz" && file_ext !== "iso" && file_ext !== "img" && file_ext !== "bz2"){
+            toast.error("This file type is not supported. Please compress the file and then try again." , {
+                position: "top-center"
+            },{
+                autoClose: 2000
             })
             e.target.value = '';
             return;
@@ -122,16 +134,12 @@ const ChatFooter = () => {
                                 <img src={"/sheets.png"} alt="Attachment Preview" />
                             )
                             :
-                            attachmentPreview.ext === 'txt'? (
+                            attachmentPreview.ext === 'txt' || attachmentPreview.ext === 'html'? (
                                 <img src={"/txt.png"} alt="Attachment Preview" />
                             )
                             :
-                            attachmentPreview.ext === 'zip'? (
+                            attachmentPreview.ext === '7z' || attachmentPreview.ext === 'rar' || attachmentPreview.ext === 'zip' || attachmentPreview.ext === 'zipx' || attachmentPreview.ext === 'z' || attachmentPreview.ext === 'tar' || attachmentPreview.ext === 'taz' || attachmentPreview.ext === 'tz' || attachmentPreview.ext === 'iso' || attachmentPreview.ext === 'img' || attachmentPreview.ext === 'bz2'? (
                                 <img src={"/zip.png"} alt="Attachment Preview" />
-                            )
-                            :
-                            attachmentPreview.ext === 'exe'? (
-                                <img src={"/exe.png"} alt="Attachment Preview" />
                             )
                             :
                             <img src={"/exe.png"} alt="Attachment Preview" />

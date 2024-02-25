@@ -14,6 +14,7 @@ module.exports = {
         c3: "#8B8D93",
         c4: "#6b8afd",
         c5: "#2E343D",
+        c6: "#323639"
       },
       fontSize: {
         md: ['16px', '1.13rem'],

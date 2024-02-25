@@ -10,6 +10,7 @@ import { useAuth } from '@/context/authContext';
 import { IoCheckmarkDone } from "react-icons/io5";
 import ImageViewer from "react-simple-image-viewer";
 import { useChatContext } from '@/context/chatContext';
+
 import DeleteMgsPopup from './popup/DeleteMessagePopup';
 import React, { forwardRef, useEffect, useState } from 'react';
 import { DELETED_FOR_ME, DELETED_FOR_EVERYONE } from '@/utils/constants';
@@ -157,9 +158,27 @@ const Message = ({ message, updateLastMessage, index, lastDate }) => {
                                     ):
                                     message?.type === "audio" ?
                                     (
-                                        <audio controls className='w-[220px] h-[30px]'>
-                                            <source src={message.url} type={"audio/" + message.ext} />
-                                        </audio>
+                                        <div className='flex gap-2 w-[220px] h-[40px]'>
+                                            <Image 
+                                                src={"/music.png"}
+                                                width={50}
+                                                height={50}
+                                                alt={message?.text || ""}
+                                                className='rounded-sm w-[45px]'
+                                            />
+                                            <div className='text-sm text-c3 leading-1 flex flex-col gap-1'>
+                                                <div>
+
+                                                </div>
+                                                <p className='line-clamp-1 text-white text-xs break-all cursor-pointer hover:text-c4'
+                                                    onClick={(e) => {
+                                                        downloadMedia(e, message);
+                                                    }}
+                                                >
+                                                    {message.name}
+                                                </p>
+                                            </div>
+                                        </div>
                                     )
                                     :
                                     message?.type === "video" ?
@@ -187,10 +206,13 @@ const Message = ({ message, updateLastMessage, index, lastDate }) => {
                                                 width={100}
                                                 height={100}
                                                 alt={message?.text || ""}
-                                                className='rounded-sm w-[45px]'
+                                                className='rounded-sm w-[45px] cursor-pointer'
+                                                onClick={() => {
+                                                    openInNewTab(message.url);
+                                                }}
                                             />
                                             <div className='text-sm text-c3 leading-1 flex flex-col gap-1'>
-                                                <p className='line-clamp-2 text-white break-all cursor-pointer hover:text-c4'
+                                                <p className='line-clamp-1 text-white break-all cursor-pointer hover:text-c4'
                                                     onClick={(e) => {
                                                         downloadMedia(e, message);
                                                     }}
@@ -212,10 +234,14 @@ const Message = ({ message, updateLastMessage, index, lastDate }) => {
                                                 width={100}
                                                 height={100}
                                                 alt={message?.text || ""}
-                                                className='rounded-sm w-[45px]'
+                                                className='rounded-sm w-[45px] cursor-pointer'
+                                                onClick={() => {
+                                                    const link = "https://docs.google.com/gview?url=" + message.url + ".doc&embedded=true";
+                                                    openInNewTab(link)
+                                                }}
                                             />
                                             <div className='text-sm text-c3 leading-1 flex flex-col gap-1'>
-                                                <p className='line-clamp-2 text-white break-all cursor-pointer hover:text-c4'
+                                                <p className='line-clamp-1 text-white break-all cursor-pointer hover:text-c4'
                                                     onClick={(e) => {
                                                         downloadMedia(e, message);
                                                     }}
@@ -237,10 +263,14 @@ const Message = ({ message, updateLastMessage, index, lastDate }) => {
                                                 width={100}
                                                 height={100}
                                                 alt={message?.text || ""}
-                                                className='rounded-sm w-[45px]'
+                                                className='rounded-sm w-[45px] cursor-pointer'
+                                                onClick={() => {
+                                                    const link = "https://docs.google.com/gview?url=" + message.url + ".slides&embedded=true";
+                                                    openInNewTab(link)
+                                                }}
                                             />
                                             <div className='text-sm text-c3 leading-1 flex flex-col gap-1'>
-                                                <p className='line-clamp-2 text-white break-all cursor-pointer hover:text-c4'
+                                                <p className='line-clamp-1 text-white break-all cursor-pointer hover:text-c4'
                                                     onClick={(e) => {
                                                         downloadMedia(e, message);
                                                     }}
@@ -262,10 +292,14 @@ const Message = ({ message, updateLastMessage, index, lastDate }) => {
                                                 width={100}
                                                 height={100}
                                                 alt={message?.text || ""}
-                                                className='rounded-sm w-[45px]'
+                                                className='rounded-sm w-[45px] cursor-pointer'
+                                                onClick={() => {
+                                                    const link = "https://docs.google.com/gview?url=" + message.url + ".sheets&embedded=true";
+                                                    openInNewTab(link)
+                                                }}
                                             />
                                             <div className='text-sm text-c3 leading-1 flex flex-col gap-1'>
-                                                <p className='line-clamp-2 text-white break-all cursor-pointer hover:text-c4'
+                                                <p className='line-clamp-1 text-white break-all cursor-pointer hover:text-c4'
                                                     onClick={(e) => {
                                                         downloadMedia(e, message);
                                                     }}
@@ -279,7 +313,7 @@ const Message = ({ message, updateLastMessage, index, lastDate }) => {
                                         </div>
                                     )
                                     :
-                                    message?.ext === "txt"?
+                                    message?.ext === "txt" || message?.ext === "html"?
                                     (
                                         <div className='flex gap-2 w-[220px] h-[40px]'>
                                             <Image 
@@ -287,10 +321,14 @@ const Message = ({ message, updateLastMessage, index, lastDate }) => {
                                                 width={100}
                                                 height={100}
                                                 alt={message?.text || ""}
-                                                className='rounded-sm w-[45px]'
+                                                className='rounded-sm w-[45px] cursor-pointer'
+                                                onClick={() => {
+                                                    const link = "https://docs.google.com/gview?url=" + message.url + ".sheets&embedded=true";
+                                                    openInNewTab(message.url)
+                                                }}
                                             />
                                             <div className='text-sm text-c3 leading-1 flex flex-col gap-1'>
-                                                <p className='line-clamp-2 text-white break-all cursor-pointer hover:text-c4'
+                                                <p className='line-clamp-1 text-white break-all cursor-pointer hover:text-c4'
                                                     onClick={(e) => {
                                                         downloadMedia(e, message);
                                                     }}
@@ -304,7 +342,7 @@ const Message = ({ message, updateLastMessage, index, lastDate }) => {
                                         </div>
                                     )
                                     :
-                                    message?.ext === "zip"?
+                                    message.ext === '7z' || message.ext === 'rar' || message.ext === 'zip' || message.ext === 'zipx' || message.ext === 'z' || message.ext === 'tar' || message.ext === 'taz' || message.ext === 'tz' || message.ext === 'iso' || message.ext === 'img' || message.ext === 'bz2'?
                                     (
                                         <div className='flex gap-2 w-[220px] h-[40px]'>
                                             <Image 
@@ -315,7 +353,7 @@ const Message = ({ message, updateLastMessage, index, lastDate }) => {
                                                 className='rounded-sm w-[45px]'
                                             />
                                             <div className='text-sm text-c3 leading-1 flex flex-col gap-1'>
-                                                <p className='line-clamp-2 text-white break-all cursor-pointer hover:text-c4'
+                                                <p className='line-clamp-1 text-white break-all cursor-pointer hover:text-c4'
                                                     onClick={(e) => {
                                                         downloadMedia(e, message);
                                                     }}
@@ -329,7 +367,29 @@ const Message = ({ message, updateLastMessage, index, lastDate }) => {
                                         </div>
                                     )
                                     :
-                                    null
+                                    (
+                                        <div className='flex gap-2 w-[220px] h-[40px]'>
+                                            <Image 
+                                                src={"/application.png"}
+                                                width={100}
+                                                height={100}
+                                                alt={message?.text || ""}
+                                                className='rounded-sm w-[45px]'
+                                            />
+                                            <div className='text-sm text-c3 leading-1 flex flex-col gap-1'>
+                                                <p className='line-clamp-1 text-white break-all cursor-pointer hover:text-c4'
+                                                    onClick={(e) => {
+                                                        downloadMedia(e, message);
+                                                    }}
+                                                >
+                                                    {message.name}
+                                                </p>
+                                                <p className='text-xs'>
+                                                    {message.size}
+                                                </p>
+                                            </div>
+                                        </div>
+                                    )
                                 }
                             </div>
                         )}
@@ -376,7 +436,7 @@ const Message = ({ message, updateLastMessage, index, lastDate }) => {
                                                 blob: message.url,
                                                 type: message.type,
                                                 ext: message.ext,
-                                              });
+                                            });
                                         }}
                                         setShowMenu={setShowMenu}
                                         deletePopupHandler={deletePopupHandler}

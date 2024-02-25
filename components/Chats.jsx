@@ -25,7 +25,9 @@ const Chats = () => {
     const isBlockExecutedRef = useRef(false);
     const [unreadMsgs, setUnreadMsgs] = useState({});
     const [readStatus, setReadStatus] = useState({});
-    const { users, setUnread, unread, resetFooterStates, data, dispatch, setUsers, chats, setChats, selectedChat, setSelectedChat } = useChatContext();
+    const { users, setUnread, unread, resetFooterStates, 
+            data, dispatch, setUsers, chats, setChats,
+            selectedChat, setSelectedChat } = useChatContext();
 
     useEffect(() => {
         resetFooterStates();
