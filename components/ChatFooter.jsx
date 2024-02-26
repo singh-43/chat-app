@@ -45,9 +45,6 @@ const ChatFooter = () => {
         file_type = file_type.toLowerCase();
         file_type = file_type.substr(0, file_type.indexOf('/'));
 
-        console.clear();
-        console.log(file.type);
-
         if(checkSize(file.size, file_type)){
             let errorMsg = "";
             if(file_type === "video"){
@@ -65,7 +62,7 @@ const ChatFooter = () => {
             return;
         }
 
-        if(file.type !== "image" && file.type !== "audio" && file.type !== "video" && file_ext !== "html" && file_ext !== "pdf" && file_ext !== "doc" && file_ext !== "docs" && file_ext !== "docx" && file_ext !== "ppt" && file_ext !== "pptx" && file_ext !== "xls" && file_ext !== "xlsx" && file_ext !== "txt" && file_ext !== "7z" && file_ext !== "rar" && file_ext !== "zip" && file_ext !== "zipx" && file_ext !== "z" && file_ext !== "tar" && file_ext !== "taz" && file_ext !== "tz" && file_ext !== "iso" && file_ext !== "img" && file_ext !== "bz2"){
+        if(file_type !== "image" && file_type !== "audio" && file_type !== "video" && file_ext !== "html" && file_ext !== "pdf" && file_ext !== "doc" && file_ext !== "docs" && file_ext !== "docx" && file_ext !== "ppt" && file_ext !== "pptx" && file_ext !== "xls" && file_ext !== "xlsx" && file_ext !== "txt" && file_ext !== "7z" && file_ext !== "rar" && file_ext !== "zip" && file_ext !== "zipx" && file_ext !== "z" && file_ext !== "tar" && file_ext !== "taz" && file_ext !== "tz" && file_ext !== "iso" && file_ext !== "img" && file_ext !== "bz2"){
             toast.error("This file type is not supported. Please compress the file and then try again." , {
                 position: "top-center"
             },{

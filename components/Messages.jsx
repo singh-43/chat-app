@@ -7,8 +7,6 @@ import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { Timestamp, deleteField, doc, onSnapshot, updateDoc } from 'firebase/firestore';
 import { DELETED_FOR_ME, DELETED_FOR_EVERYONE } from '@/utils/constants';
 import { useAuth } from '@/context/authContext';
-import Loader from './Loader';
-import Icons from './Icons';
 
 const Messages = () => {
 
@@ -141,7 +139,7 @@ const Messages = () => {
     useEffect(() => {
         setTimeout(() => {
             setUnread(null)
-        }, 2500)
+        }, 1000)
         //eslint-disable-next-line
     }, [!unread])
 
@@ -177,7 +175,7 @@ const Messages = () => {
                             unread && i === messagesData?.length - unread  && currentUser?.uid !== m?.sender  && 
                             <div className='flex justify-center mb-5'>
                                 <div ref={unreadRef} id="content" className='bg-c1/[0.5] py-[6px] text-sm rounded-xl w-[145px] text-center'>
-                                    Unread Messages
+                                {`${unread} Unread messages`}
                                 </div>
                             </div>
                         }

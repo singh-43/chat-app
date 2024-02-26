@@ -200,9 +200,8 @@ const Chats = () => {
                                                 justify-between'>
                                                 <div className='font-medium'>{`${user.displayName} ${ currentUser?.uid === user?.uid ? "(You)" : "" }`}</div>
                                                 {( chat[1]?.lastMessage?.text || chat[1]?.lastMessage?.img ) && <div className='text-c3 text-xs'>{formatDate(date)}</div>}
-                                                {/* <div className='text-c3 text-xs'>{formatDate(chat[1]?.date?.toDate())}</div> */}
                                             </span>
-                                            <div className={`text-sm text-c3 flex items-center gap-1`}>
+                                            <div className={`text-sm text-c3 flex items-center gap-1 ${ unreadMsgs?.[chat[0]]?.length> 0 ? "max-w-[90%]" : ""}`}>
                                                 {
                                                     (isUserBlocked && "You blocked this user.")||
                                                     ((chat[1]?.lastMessage?.text || chat[1]?.lastMessage?.type) && (

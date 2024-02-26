@@ -10,12 +10,12 @@ import { useAuth } from '@/context/authContext';
 import { IoCheckmarkDone } from "react-icons/io5";
 import ImageViewer from "react-simple-image-viewer";
 import { useChatContext } from '@/context/chatContext';
-
 import DeleteMgsPopup from './popup/DeleteMessagePopup';
 import React, { forwardRef, useEffect, useState } from 'react';
 import { DELETED_FOR_ME, DELETED_FOR_EVERYONE } from '@/utils/constants';
 import { timeHelper, dateHelper, handleDragStart, openInNewTab } from '@/utils/helpers';
 import { Timestamp, arrayRemove, arrayUnion, doc, getDoc, updateDoc } from 'firebase/firestore';
+import Tooltip from './Tooltip';
 
 const Message = ({ message, updateLastMessage, index, lastDate }) => {
 
@@ -111,8 +111,8 @@ const Message = ({ message, updateLastMessage, index, lastDate }) => {
                         className="mb-4"
                     />
                     <div className={`${message?.url ? "px-2 pt-2 pb-[4px]" : "px-[8px] pt-[8px] pb-[4px]"}
-                        group flex flex-col rounded-md relative break-all bg-c5 ${self ? "rounded-br-sm" : 
-                        "rounded-bl-sm"}`}>
+                        group flex flex-col rounded-md break-all bg-c5 ${self ? "rounded-br-sm" : 
+                        "rounded-bl-sm"} relative`}>
                         {message?.url && (
                             <div 
                                 className='mb-[2px]'
@@ -121,7 +121,7 @@ const Message = ({ message, updateLastMessage, index, lastDate }) => {
                                 {
                                     message.type === "image"?
                                     (
-                                        <div className='relative group'>
+                                        <div className='relative'>
                                             <Image 
                                                 src={message?.url}
                                                 width={220}
@@ -135,13 +135,15 @@ const Message = ({ message, updateLastMessage, index, lastDate }) => {
                                                     })
                                                 }}
                                             />
-                                            <div className="hidden absolute bottom-2 right-2 group-hover:flex
+                                            <div className="hidden w-6 h-6 flex justify-center items-center rounded-full bg-white/[0.6] absolute bottom-2 right-2 group-hover:flex
                                                 cursor-pointer"
                                                 onClick={(e) => {
                                                     downloadMedia(e, message);
                                                 }}    
                                             >
-                                                <FaDownload size={18} color='#202329' />
+                                                <Tooltip content="Download" position="left">
+                                                    <FaDownload size={15} color='black' />
+                                                </Tooltip>
                                             </div>
                                             {
                                                 imageViewer && imageViewer.msgId === message.id && (
@@ -200,151 +202,201 @@ const Message = ({ message, updateLastMessage, index, lastDate }) => {
                                 {
                                     message?.ext === "pdf"?
                                     (
-                                        <div className='flex gap-2 w-[220px] h-[40px]'>
+                                        <div className='flex w-[220px] h-[40px] relative'>
                                             <Image 
                                                 src={"/pdf.png"}
                                                 width={100}
                                                 height={100}
                                                 alt={message?.text || ""}
-                                                className='rounded-sm w-[45px] cursor-pointer'
-                                                onClick={() => {
-                                                    openInNewTab(message.url);
-                                                }}
+                                                className='rounded-sm w-[45px] relative -left-1'
                                             />
-                                            <div className='text-sm text-c3 leading-1 flex flex-col gap-1'>
-                                                <p className='line-clamp-1 text-white break-all cursor-pointer hover:text-c4'
-                                                    onClick={(e) => {
-                                                        downloadMedia(e, message);
+                                            <div className='text-sm text-c3 leading-1 flex flex-col gap-1 w-full h-[80px]'>
+                                                <p className='text-white cursor-pointer hover:text-c4 max-w-[87%]'
+                                                    onClick={() => {
+                                                        openInNewTab(message.url);
                                                     }}
                                                 >
-                                                    {message.name}
+                                                    <Tooltip position="bottom" content="Open">
+                                                        <span className='line-clamp-1 break-all'>
+                                                            {message.name}
+                                                        </span>
+                                                    </Tooltip>
                                                 </p>
                                                 <p className='text-xs'>
                                                     {message.size}
                                                 </p>
+                                            </div>
+                                            <div className="rounded-full absolute top-1 right-1 cursor-pointer"
+                                                onClick={(e) => {
+                                                    downloadMedia(e, message);
+                                                }}    
+                                            >
+                                                <Tooltip position="left" content="Download">
+                                                    <FaDownload size={14} />
+                                                </Tooltip>
                                             </div>
                                         </div>
                                     )
                                     :
                                     message?.ext === "docs" || message?.ext === "docx" || message?.ext === "doc" ?
                                     (
-                                        <div className='flex gap-2 w-[220px] h-[40px]'>
+                                        <div className='flex gap-1 w-[220px] h-[40px] relative'>
                                             <Image 
                                                 src={"/doc.png"}
                                                 width={100}
                                                 height={100}
                                                 alt={message?.text || ""}
-                                                className='rounded-sm w-[45px] cursor-pointer'
-                                                onClick={() => {
-                                                    const link = "https://docs.google.com/gview?url=" + message.url + ".doc&embedded=true";
-                                                    openInNewTab(link)
-                                                }}
+                                                className='rounded-sm w-[45px] relative -left-1'
                                             />
-                                            <div className='text-sm text-c3 leading-1 flex flex-col gap-1'>
-                                                <p className='line-clamp-1 text-white break-all cursor-pointer hover:text-c4'
-                                                    onClick={(e) => {
-                                                        downloadMedia(e, message);
+                                            <div className='text-sm text-c3 leading-1 flex flex-col gap-1 w-full h-[80px]'>
+                                                <p className='w-[87%] text-white cursor-pointer hover:text-c4'
+                                                    onClick={() => {
+                                                        const link = "https://docs.google.com/gview?url=" + message.url + ".doc&embedded=true";
+                                                        openInNewTab(link)
                                                     }}
                                                 >
-                                                    {message.name}
+                                                    <Tooltip position="bottom" content="Open">
+                                                        <span className='line-clamp-1 break-all'>
+                                                            {message.name}
+                                                        </span>
+                                                    </Tooltip>
                                                 </p>
                                                 <p className='text-xs'>
                                                     {message.size}
                                                 </p>
+                                            </div>
+                                            <div className="rounded-full absolute top-1 right-1 cursor-pointer"
+                                                onClick={(e) => {
+                                                    downloadMedia(e, message);
+                                                }}    
+                                            >
+                                                <Tooltip position="left" content="Download">
+                                                    <FaDownload size={14} />
+                                                </Tooltip>
                                             </div>
                                         </div>
                                     )
                                     :
                                     message?.ext === "ppt" || message?.ext === "pptx"?
                                     (
-                                        <div className='flex gap-2 w-[220px] h-[40px]'>
+                                        <div className='flex w-[220px] h-[40px] relative'>
                                             <Image 
                                                 src={"/ppt.png"}
                                                 width={100}
                                                 height={100}
                                                 alt={message?.text || ""}
-                                                className='rounded-sm w-[45px] cursor-pointer'
-                                                onClick={() => {
-                                                    const link = "https://docs.google.com/gview?url=" + message.url + ".slides&embedded=true";
-                                                    openInNewTab(link)
-                                                }}
+                                                className='rounded-sm w-[45px] relative -left-1'
                                             />
-                                            <div className='text-sm text-c3 leading-1 flex flex-col gap-1'>
-                                                <p className='line-clamp-1 text-white break-all cursor-pointer hover:text-c4'
-                                                    onClick={(e) => {
-                                                        downloadMedia(e, message);
+                                            <div className='text-sm text-c3 leading-1 flex flex-col gap-1 w-full h-[80px]'>
+                                                <p className='w-[87%] text-white cursor-pointer hover:text-c4'
+                                                    onClick={() => {
+                                                        const link = "https://docs.google.com/gview?url=" + message.url + ".slides&embedded=true";
+                                                        openInNewTab(link)
                                                     }}
                                                 >
-                                                    {message.name}
+                                                    <Tooltip position="bottom" content="Open">
+                                                        <span className='line-clamp-1 break-all'>
+                                                            {message.name}
+                                                        </span>
+                                                    </Tooltip>
                                                 </p>
                                                 <p className='text-xs'>
                                                     {message.size}
                                                 </p>
+                                            </div>
+                                            <div className="rounded-full absolute top-1 right-1 cursor-pointer"
+                                                onClick={(e) => {
+                                                    downloadMedia(e, message);
+                                                }}    
+                                            >
+                                                <Tooltip position="left" content="Download">
+                                                    <FaDownload size={14} />
+                                                </Tooltip>
                                             </div>
                                         </div>
                                     )
                                     :
                                     message?.ext === "xls" || message?.ext === "xlsx"?
                                     (
-                                        <div className='flex gap-2 w-[220px] h-[40px]'>
+                                        <div className='flex w-[220px] h-[40px] relative'>
                                             <Image 
                                                 src={"/sheets.png"}
                                                 width={100}
                                                 height={100}
                                                 alt={message?.text || ""}
-                                                className='rounded-sm w-[45px] cursor-pointer'
-                                                onClick={() => {
-                                                    const link = "https://docs.google.com/gview?url=" + message.url + ".sheets&embedded=true";
-                                                    openInNewTab(link)
-                                                }}
+                                                className='rounded-sm w-[45px] relative -left-1'
                                             />
-                                            <div className='text-sm text-c3 leading-1 flex flex-col gap-1'>
-                                                <p className='line-clamp-1 text-white break-all cursor-pointer hover:text-c4'
-                                                    onClick={(e) => {
-                                                        downloadMedia(e, message);
+                                            <div className='text-sm text-c3 leading-1 flex flex-col gap-1 w-full h-[80px]'>
+                                                <p className='w-[87%] text-white cursor-pointer hover:text-c4'
+                                                    onClick={() => {
+                                                        const link = "https://docs.google.com/gview?url=" + message.url + ".sheets&embedded=true";
+                                                        openInNewTab(link)
                                                     }}
                                                 >
-                                                    {message.name}
+                                                    <Tooltip position="bottom" content="Open">
+                                                        <span className='line-clamp-1 break-all'>
+                                                            {message.name}
+                                                        </span>
+                                                    </Tooltip>
                                                 </p>
                                                 <p className='text-xs'>
                                                     {message.size}
                                                 </p>
+                                            </div>
+                                            <div className="rounded-full absolute top-1 right-1 cursor-pointer"
+                                                onClick={(e) => {
+                                                    downloadMedia(e, message);
+                                                }}    
+                                            >
+                                                <Tooltip position="left" content="Download">
+                                                    <FaDownload size={14} />
+                                                </Tooltip>
                                             </div>
                                         </div>
                                     )
                                     :
                                     message?.ext === "txt" || message?.ext === "html"?
                                     (
-                                        <div className='flex gap-2 w-[220px] h-[40px]'>
+                                        <div className='flex gap-2 w-[220px] h-[40px] relative'>
                                             <Image 
                                                 src={"/txt.png"}
                                                 width={100}
                                                 height={100}
                                                 alt={message?.text || ""}
-                                                className='rounded-sm w-[45px] cursor-pointer'
-                                                onClick={() => {
-                                                    const link = "https://docs.google.com/gview?url=" + message.url + ".sheets&embedded=true";
-                                                    openInNewTab(message.url)
-                                                }}
+                                                className='rounded-sm w-[45px]'
                                             />
-                                            <div className='text-sm text-c3 leading-1 flex flex-col gap-1'>
-                                                <p className='line-clamp-1 text-white break-all cursor-pointer hover:text-c4'
-                                                    onClick={(e) => {
-                                                        downloadMedia(e, message);
-                                                    }}
+                                            <div className='text-sm text-c3 leading-1 flex flex-col gap-1 w-full h-[80px]'>
+                                                <p className='w-[87%] text-white cursor-pointer hover:text-c4'
+                                                    onClick={() => {
+                                                        const link = "https://docs.google.com/gview?url=" + message.url + ".doc&embedded=true";
+                                                        openInNewTab(message.url)
+                                                    }}                                                                                                   
                                                 >
-                                                    {message.name}
+                                                    <Tooltip position="bottom" content="Open">
+                                                        <span className='line-clamp-1 break-all'>
+                                                            {message.name}
+                                                        </span>
+                                                    </Tooltip>
                                                 </p>
                                                 <p className='text-xs'>
                                                     {message.size}
                                                 </p>
+                                            </div>
+                                            <div className="rounded-full absolute top-1 right-1 cursor-pointer"
+                                                onClick={(e) => {
+                                                    downloadMedia(e, message);
+                                                }}    
+                                            >
+                                                <Tooltip position="left" content="Download">
+                                                    <FaDownload size={14} />
+                                                </Tooltip>
                                             </div>
                                         </div>
                                     )
                                     :
                                     message.ext === '7z' || message.ext === 'rar' || message.ext === 'zip' || message.ext === 'zipx' || message.ext === 'z' || message.ext === 'tar' || message.ext === 'taz' || message.ext === 'tz' || message.ext === 'iso' || message.ext === 'img' || message.ext === 'bz2'?
                                     (
-                                        <div className='flex gap-2 w-[220px] h-[40px]'>
+                                        <div className='flex gap-2 w-[220px] h-[40px] relative'>
                                             <Image 
                                                 src={"/zip.png"}
                                                 width={100}
@@ -352,23 +404,28 @@ const Message = ({ message, updateLastMessage, index, lastDate }) => {
                                                 alt={message?.text || ""}
                                                 className='rounded-sm w-[45px]'
                                             />
-                                            <div className='text-sm text-c3 leading-1 flex flex-col gap-1'>
-                                                <p className='line-clamp-1 text-white break-all cursor-pointer hover:text-c4'
-                                                    onClick={(e) => {
-                                                        downloadMedia(e, message);
-                                                    }}
-                                                >
+                                            <div className='text-sm text-c3 leading-1 flex flex-col gap-1 w-full'>
+                                                <p className='line-clamp-1 text-white break-all max-w-[87%]'>
                                                     {message.name}
                                                 </p>
                                                 <p className='text-xs'>
                                                     {message.size}
                                                 </p>
                                             </div>
+                                            <div className="rounded-full absolute top-1 right-1 cursor-pointer"
+                                                onClick={(e) => {
+                                                    downloadMedia(e, message);
+                                                }}    
+                                            >
+                                                <Tooltip position="left" content="Download">
+                                                    <FaDownload size={14} />
+                                                </Tooltip>
+                                            </div>
                                         </div>
                                     )
                                     :
                                     (
-                                        <div className='flex gap-2 w-[220px] h-[40px]'>
+                                        <div className='flex gap-2 w-[220px] h-[40px] relative'>
                                             <Image 
                                                 src={"/application.png"}
                                                 width={100}
@@ -376,17 +433,22 @@ const Message = ({ message, updateLastMessage, index, lastDate }) => {
                                                 alt={message?.text || ""}
                                                 className='rounded-sm w-[45px]'
                                             />
-                                            <div className='text-sm text-c3 leading-1 flex flex-col gap-1'>
-                                                <p className='line-clamp-1 text-white break-all cursor-pointer hover:text-c4'
-                                                    onClick={(e) => {
-                                                        downloadMedia(e, message);
-                                                    }}
-                                                >
+                                            <div className='text-sm text-c3 leading-1 flex flex-col gap-1 w-full'>
+                                                <p className='line-clamp-1 text-white break-all max-w-[87%]'>
                                                     {message.name}
                                                 </p>
                                                 <p className='text-xs'>
                                                     {message.size}
                                                 </p>
+                                            </div>
+                                            <div className="rounded-full absolute top-1 right-1 cursor-pointer"
+                                                onClick={(e) => {
+                                                    downloadMedia(e, message);
+                                                }}    
+                                            >
+                                                <Tooltip position="left" content="Download">
+                                                    <FaDownload size={14} />
+                                                </Tooltip>
                                             </div>
                                         </div>
                                     )
@@ -394,11 +456,13 @@ const Message = ({ message, updateLastMessage, index, lastDate }) => {
                             </div>
                         )}
                         {message.text && (
-                            <div className={`text-md select-text ${ message.img ? "max-w-[220px]" : null }`}>
+                            <div className={`text-md select-text ${ message.type !== "image" && message.type !== "audio" && message.type !== "video" ? "ml-1" : null } ${ message.img ? "max-w-[220px]" : null }`}>
                                 {message.text}
                             </div>
                         )}
-                        <div className={`flex items-center gap-1 mt-[1px] ${ self ? "justify-end" : "justify-end" } ${message.text.length === 0 && message.type !== "image" && message.type !== "video" && message.type !== "audio" ? "absolute bottom-[3px] right-[6px]" : null}`}>
+                        <div className={`flex items-center gap-1 mt-[1px] ${ self ? "justify-end" : "justify-end" }
+                            ${message.text.length === 0 && message.type !== "image" && message.type !== "video" && message.type !== "audio" ? "absolute bottom-[6px] right-2" : null}
+                        `}>
                             {message?.edited && (<div className="text-c3 text-xs">
                                 {`Edited`}
                             </div>)}
