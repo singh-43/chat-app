@@ -8,6 +8,8 @@
   font-family: "Lexend", sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  --progress-width: 0;
+  --buffered-width: 0;
 }
 
 body {
@@ -26,6 +28,39 @@ body {
 
 #tooltip:hover * {
   visibility: visible;
+}
+
+#volume {
+  display: flex;
+  flex-direction: reverse;
+  gap: 1px;
+}
+
+#volume:hover {
+  padding-top: 2px;
+  padding-bottom: 2px;
+  padding-left: 4px;
+  padding-right: 4px;
+  background-color: gray;
+  border-radius: 12px;
+}
+
+#volume:hover * {
+  display: flex;
+}
+
+.progress-bar::-webkit-slider-thumb {
+  z-index: 4;
+  position: relative;
+}
+.progress-bar::before {
+  transform: scaleX(var(--progress-width));
+  z-index: 3;
+}
+.progress-bar::after {
+  transform: scaleX(var(--buffered-width));
+  transform-origin: left;
+  z-index: 2;
 }
 
 .glass-effect {

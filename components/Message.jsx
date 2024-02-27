@@ -16,6 +16,7 @@ import { DELETED_FOR_ME, DELETED_FOR_EVERYONE } from '@/utils/constants';
 import { timeHelper, dateHelper, handleDragStart, openInNewTab } from '@/utils/helpers';
 import { Timestamp, arrayRemove, arrayUnion, doc, getDoc, updateDoc } from 'firebase/firestore';
 import Tooltip from './Tooltip';
+import AudioPlayer from './AudioPlayer/AudioPlayer';
 
 const Message = ({ message, updateLastMessage, index, lastDate }) => {
 
@@ -160,26 +161,31 @@ const Message = ({ message, updateLastMessage, index, lastDate }) => {
                                     ):
                                     message?.type === "audio" ?
                                     (
-                                        <div className='flex gap-2 w-[220px] h-[40px]'>
+                                        <div className='flex w-[220px] h-[40px]'>
                                             <Image 
                                                 src={"/music.png"}
-                                                width={50}
-                                                height={50}
+                                                width={35}
+                                                height={35}
                                                 alt={message?.text || ""}
-                                                className='rounded-sm w-[45px]'
+                                                className='rounded-sm w-[35px] h-[35px] relative top-[3px]'
                                             />
-                                            <div className='text-sm text-c3 leading-1 flex flex-col gap-1'>
-                                                <div>
-
+                                            <div className='text-sm text-c3 leading-1 flex flex-col mt-1 ml-1'>
+                                                <div className='flex items-center gap-2'>
+                                                    <p className='line-clamp-1 text-white text-xs break-all'>
+                                                        {message.name}
+                                                    </p>
+                                                    <div className="rounded-full cursor-pointer"
+                                                        onClick={(e) => {
+                                                            downloadMedia(e, message);
+                                                        }}    
+                                                    >
+                                                        <Tooltip position="left" content="Download">
+                                                            <FaDownload size={14} />
+                                                        </Tooltip>
+                                                    </div>
                                                 </div>
-                                                <p className='line-clamp-1 text-white text-xs break-all cursor-pointer hover:text-c4'
-                                                    onClick={(e) => {
-                                                        downloadMedia(e, message);
-                                                    }}
-                                                >
-                                                    {message.name}
-                                                </p>
                                             </div>
+                                            <AudioPlayer messageExt={message.ext} messageUrl={message.url} />
                                         </div>
                                     )
                                     :
