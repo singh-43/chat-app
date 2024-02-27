@@ -101,9 +101,9 @@ const AudioPlayer = ({ messageUrl, messageExt }) => {
                     {!isReady ? (
                     <CgSpinner size={24} className="animate-spin" />
                     ) : isPlaying ? (
-                    <MdPause size={26} />
+                    <MdPause size={24} />
                     ) : (
-                    <MdPlayArrow size={26} />
+                    <MdPlayArrow size={24} />
                     )}
                 </IconButton>
                 <AudioProgressBar currrentProgress={currrentProgress} 
@@ -126,8 +126,8 @@ const AudioPlayer = ({ messageUrl, messageExt }) => {
                         aria-label={volume === 0 ? "unmute" : "mute"}
                     >
                         {   volume === 0 ? 
-                            <MdVolumeOff size={22} color="" /> : 
-                            <MdVolumeUp size={22} color="" />
+                            <MdVolumeOff size={20} color="" /> : 
+                            <MdVolumeUp size={20} color="" />
                         }
                     </IconButton>
                 </div>

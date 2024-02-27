@@ -174,7 +174,7 @@ const Message = ({ message, updateLastMessage, index, lastDate }) => {
                                                     <p className='line-clamp-1 text-white text-xs break-all'>
                                                         {message.name}
                                                     </p>
-                                                    <div className="rounded-full cursor-pointer"
+                                                    <div className="rounded-full cursor-pointer mr-2"
                                                         onClick={(e) => {
                                                             downloadMedia(e, message);
                                                         }}    
