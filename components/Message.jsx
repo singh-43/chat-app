@@ -17,8 +17,14 @@ import { timeHelper, dateHelper, handleDragStart, openInNewTab } from '@/utils/h
 import { Timestamp, arrayRemove, arrayUnion, doc, getDoc, updateDoc } from 'firebase/firestore';
 import Tooltip from './Tooltip';
 import AudioPlayer from './AudioPlayer/AudioPlayer';
+import { toast } from 'react-toastify';
+import ToastMessage from './ToastMessage';
 
 const Message = ({ message, updateLastMessage, index, lastDate }) => {
+
+    const imageLoader = ({ src, width, quality }) => {
+        return `https://example.com/${src}?w=${width}&q=${quality || 75}`
+    }
 
     const { currentUser } = useAuth();
     const self = message?.sender === currentUser?.uid;
@@ -83,6 +89,12 @@ const Message = ({ message, updateLastMessage, index, lastDate }) => {
         console.clear();
         console.log("message?.img", message?.url);
         console.log("message?.fileName", message?.name);
+        toast.dismiss();
+        toast.success("File download has started", {
+            position: "top-center"
+        },{
+          autoClose: 2000
+        })
         e.preventDefault();
         saveAs(message.url, message?.name);
     }
@@ -98,6 +110,7 @@ const Message = ({ message, updateLastMessage, index, lastDate }) => {
                 </div>)
             } */}
             <div className={`mb-5 max-w-[75%] ${self ? "self-end" : ""} select-none`}>
+                <ToastMessage />
                 {showDeletePopup && (<DeleteMgsPopup 
                     self={self}
                     noHeader={true}
@@ -128,7 +141,10 @@ const Message = ({ message, updateLastMessage, index, lastDate }) => {
                                                 width={220}
                                                 height={220}
                                                 alt={message?.text || ""}
-                                                className='rounded-sm w-[220px] max-h-[220px] cursor-pointer'
+                                                // loading='lazy'
+                                                className='rounded-sm w-[220px] max-h-[220px] cursor-pointer
+                                                    transition-opacity opacity-0 duration-[2s]'
+                                                onLoadingComplete={(image) => image.classList.remove("opacity-0")}
                                                 onClick={() => {
                                                     setImageViewer({
                                                         msgId: message?.id,
@@ -184,8 +200,8 @@ const Message = ({ message, updateLastMessage, index, lastDate }) => {
                                                         </Tooltip>
                                                     </div>
                                                 </div>
+                                                <AudioPlayer messageExt={message.ext} messageUrl={message.url} />
                                             </div>
-                                            <AudioPlayer messageExt={message.ext} messageUrl={message.url} />
                                         </div>
                                     )
                                     :
@@ -208,7 +224,7 @@ const Message = ({ message, updateLastMessage, index, lastDate }) => {
                                 {
                                     message?.ext === "pdf"?
                                     (
-                                        <div className='flex w-[220px] h-[40px] relative'>
+                                        <div className='flex max-w-[220px] min-w-[220px] h-[40px] relative'>
                                             <Image 
                                                 src={"/pdf.png"}
                                                 width={100}
@@ -246,7 +262,7 @@ const Message = ({ message, updateLastMessage, index, lastDate }) => {
                                     :
                                     message?.ext === "docs" || message?.ext === "docx" || message?.ext === "doc" ?
                                     (
-                                        <div className='flex gap-1 w-[220px] h-[40px] relative'>
+                                        <div className='flex gap-1 max-w-[220px] min-w-[220px] h-[40px] relative'>
                                             <Image 
                                                 src={"/doc.png"}
                                                 width={100}
@@ -462,7 +478,7 @@ const Message = ({ message, updateLastMessage, index, lastDate }) => {
                             </div>
                         )}
                         {message.text && (
-                            <div className={`text-md select-text ${ message.type !== "image" && message.type !== "audio" && message.type !== "video" ? "ml-1" : null } ${ message.img ? "max-w-[220px]" : null }`}>
+                            <div className={`text-md select-text ${ message.type === "audio" ? "mt-3" : null } ${ message.img ? "max-w-[220px]" : null }`}>
                                 {message.text}
                             </div>
                         )}

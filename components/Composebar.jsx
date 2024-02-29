@@ -27,7 +27,7 @@ const Composebar = () => {
     useEffect(() => {
         setInputText(editMsg?.text || "");
         //eslint-disable-next-line
-    }, [editMsg])    
+    }, [editMsg])   
 
     useEffect(() => {
         const getChats = () => {

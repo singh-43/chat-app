@@ -73,7 +73,7 @@ const AudioPlayer = ({ messageUrl, messageExt }) => {
     const audioRef = useRef(null);
 
     return (
-        <div className="absolute bottom-[18px] left-[42px]">
+        <div className="absolute top-[30px] left-[42px]">
             <audio ref={audioRef} preload='metadeta' className='hidden' controls
                 onCanPlay={(e) => {
                     setIsReady(true);
