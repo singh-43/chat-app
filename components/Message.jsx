@@ -101,14 +101,14 @@ const Message = ({ message, updateLastMessage, index, lastDate }) => {
 
     return (
         <>
-            {/* {
+            {
                 ((dateHelper(date) !== lastDate[index - 1]) || index === 0) && (
                 <div className='flex justify-center text-c3 text-sm mb-5'>
                     <div className='bg-c1/[0.5] py-[6px] rounded-xl w-[145px] font-semibold text-center'>
                         {dateHelper(date)}
                     </div>
                 </div>)
-            } */}
+            }
             <div className={`mb-5 max-w-[75%] ${self ? "self-end" : ""} select-none`}>
                 <ToastMessage />
                 {showDeletePopup && (<DeleteMgsPopup 
