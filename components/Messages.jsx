@@ -148,20 +148,20 @@ const Messages = () => {
         chatContainer.scrollTop = chatContainer?.scrollHeight;
     }
 
-    useEffect(() => {
-        const updatedDate = {}
-        messagesData?.map((m, index) => {
-            const timestamp = new Timestamp(
-                m.date?.seconds,
-                m.date?.nanoseconds
-            );
+    // useEffect(() => {
+    //     const updatedDate = {}
+    //     messagesData?.map((m, index) => {
+    //         const timestamp = new Timestamp(
+    //             m.date?.seconds,
+    //             m.date?.nanoseconds
+    //         );
         
-            const date = timestamp.toDate();
-            updatedDate[index] = dateHelper(date);
-        })
-        setLastDate(updatedDate)
-        //eslint-disable-next-line
-    }, [messages]) 
+    //         const date = timestamp.toDate();
+    //         updatedDate[index] = dateHelper(date);
+    //     })
+    //     setLastDate(updatedDate)
+    //     //eslint-disable-next-line
+    // }, [messages]) 
 
     return (
         <div 
